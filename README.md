@@ -3,7 +3,7 @@ Converting YTLA HDF5 data to Miriad format.
 
 Modified from the idl2miriad task of the MIR IDL package (https://github.com/qi-molecules/sma-mir)
 
-The source code ytla2miriad is under the Miriad_converter directory.
+The source code ytla2miriad is under the Miriad_converter directory, which is initially developed by Hauyu Baobab Liu, Kyle Lin, and Sheng-Yuan Liu.
 It depends on the external library files under the idl_sav directory.
 
 
@@ -40,3 +40,7 @@ restor map=ytla_map beam=ytla_beam model=ytla_model out=ytla_clean mode=residual
 fits in=ytla_clean op=xyout out=ytla_clean.fits
 
 fits in=ytla_residual op=xyout out=ytla_residual.fits
+
+### Frequently used Miriad tasks: uvlist, uvflag, uvputhd, uvplt, uvspec, prthd
+
+### Full task list: https://www.atnf.csiro.au/computing/software/miriad/taskindex.html
