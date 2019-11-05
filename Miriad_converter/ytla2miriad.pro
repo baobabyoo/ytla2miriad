@@ -104,7 +104,7 @@ if KEYWORD_SET(verbose) then begin
    print, ''
 endif
 
-;; loading time stamp
+;; loading time stamp and convert to Juliand date
 time    = h5d_read(  h5d_open(fid, 'time')  )
 ytla    = create_struct(ytla, 'time', time)
 ytla         = create_struct(ytla, 'nint', (size(ytla.time))[1]) ; number of integrations
@@ -115,6 +115,13 @@ if KEYWORD_SET(verbose) then begin
    print, s
    print, ''
 endif
+
+nunit = n_elements(time)
+jd    = dblarr(nunit)
+for k = 0, nunit-1 do begin
+   jd[k] = systime(elapsed=time[k], /julian, /utc)
+endfor
+ytla  = create_struct(ytla, 'jd', jd)
 
 
 ;; loading target
@@ -791,10 +798,35 @@ function ytla_getinttime, ytla, integration
 ; #################################################################
 
    ; not yet implementing the actual information / place holder
-   inttime = 520d
+   ;inttime = 520d
+   inttime = ytla.pointing[integration, 3] - ytla.pointing[integration, 2]
 
    return, inttime
 
+end
+
+
+
+function ytla_getjd, ytla, integration
+; #################################################################
+;
+; obtaining observing date/time and convert it to Julian date
+;
+; Input:
+;   ytla        : A variable name to handle the loaded YTLA data
+;   integraion  : [int] the ID of the integration
+;
+; Output:
+;   jd          : the true Juliand date of the observing unit
+;                 not the reduced Juliand date (do not add 2400000. to this)
+;
+; #################################################################
+
+   epoch = (ytla.pointing[integration, 2] + ytla.pointing[integration, 3]) / 2.d
+   jd = systime(elapsed=epoch, /julian, /utc)
+   ;print, ytla.pointing[integration,2],  ytla.pointing[integration,3]
+
+   return, jd
 end
 
 
@@ -868,9 +900,11 @@ pro ytla_wttoTsys, ytla, integration, wbtsys, wbflag, delta_nu, delta_t, jyperK,
     ant1 = ytla_baselines[j, 0]
     ant2 = ytla_baselines[j, 1]
 
-    wt = sqrt(  total( ytla.weight[integration, *, j, sidebandid]^2 )  )
+    ;wt = sqrt(  total( ytla.weight[integration, *, j, sidebandid]^2 )  )
+    wt = sqrt(  total( ytla.weight[integration, 10:510, j, sidebandid] )  )
     Var = (1d / wt)
-    Tsysbl = sqrt(   ( Var * 2d * delta_nu * delta_t) / (jyperK^2d)   )
+    ;Tsysbl = sqrt(   ( Var * 2d * delta_nu * delta_t) / (jyperK^2d)   )
+    Tsysbl = sqrt(   ( Var * 500d * delta_nu * delta_t)  ) / jyperK
 
 
     ; initialize narrow band (spectral window) baseline-based tsys array
@@ -885,6 +919,10 @@ pro ytla_wttoTsys, ytla, integration, wbtsys, wbflag, delta_nu, delta_t, jyperK,
 
 
   endfor
+
+  ; debug
+  ;print, 'i = ', integration
+  ;print, 'Tsys = ', wbtsys
 
 
 end
@@ -1200,7 +1238,8 @@ function ytla_getpreamble, ytla, intid, blid, LO, ytla_baselines
   ; visibility header/data
   preamble[0]   = -( ( ytla.blmeter[intid,0,blid] / kilowavelength_mks ) * 1e3 ) / LO
   preamble[1]   = -( ( ytla.blmeter[intid,1,blid] / kilowavelength_mks ) * 1e3 ) / LO
-  preamble[2]   = 2451545.0d0 ; ytla.time[intid] ; tentative, needs to convert to jd
+  ;preamble[2]   = 2451545.0d0 ; ytla.time[intid] ; tentative, needs to convert to jd
+  preamble[2]   = ytla.jd[intid]
 
   ant1 = ytla_baselines[blid, 0]
   ant2 = ytla_baselines[blid, 1]
@@ -1212,7 +1251,7 @@ end
 
 
 
-function ytla_getcomplexvis, ytla, integration, blid, sideband, nschan
+function ytla_getcomplexvis, ytla, integration, blid, sideband, nschan, flags
 ; ################################################################
 ;
 ; Returning complex visibility in a format that Miriad like.
@@ -1227,7 +1266,12 @@ function ytla_getcomplexvis, ytla, integration, blid, sideband, nschan
 ; Return :
 ;     complexvis  : [complex array] real and imaginary parts
 ;
+; Updates:
+;     flags	  : [long] flags of data 1 = good; 0 = bad?
+;
 ; ################################################################
+
+  flags = make_array(nschan, /long, value=1)
 
   if (sideband eq 'lsb') then sidebandid = 0 ; lsb
   if (sideband eq 'usb') then sidebandid = 1 ; usb
@@ -1238,9 +1282,14 @@ function ytla_getcomplexvis, ytla, integration, blid, sideband, nschan
    infid = where( finite(real) eq 0 )
      real[infid] = 0d
      img[infid]  = 0d
+     flags[infid] = 0
    infid = where( finite(img) eq 0 )
      real[infid] = 0d
      img[infid]  = 0d
+     flags[infid] = 0
+
+   maskid = where( ytla.flag[integration, 0:(nschan-1), blid, sidebandid] gt 0)
+   flags[maskid] = 0
 
    complexvis = complex(real, img)
 
@@ -1402,17 +1451,24 @@ if (not keyword_set(verbose)) then verbose = 0
     ytla_baselines = ytla_getbaselines(nants)
 
     ; radius of antennae  YTLA: Needs this meta data
-    rant = (1.1975/2)
+    rant = (1.182/2)
 
     ; pb hwhm (= 16.985 * 345 / LO) is based on beam calculator on TEST CENTRAL YTLA: Needs this meta data
     ; Presently scales from the SMA pbfwhm to ytla
-    pbfwhm = float(2. * (16.985 * 345. / LO)) * ( 6d / 1.2d )  ; / place holder
+    ;;pbfwhm = float(2. * (16.985 * 345. / LO)) * ( 6d / 1.2d )  ; / place holder
+
+    ; fitted beam width = 64.6 * lambda / D (in deg) 
+    pbfwhm = 64.6 * (cvel_mks / (LO * 1.e9 * rant * 2d) ) * 3600.	; fwhm im arcsec
+    ;print, pbfwhm
 
     ; get the assumed aperture efficiency   YTLA: Needs this meta data
-    reff = 1.0
+    ;;reff = 1.0
+    ;; reff = 0.5 will give approximately jyperK = 5000, which relates Tsys=200 to SEFD=1MJy
+    reff = 0.5
 
     ; get jyperK information
     jyperK = get_jyperK(reff, rant)
+    ;print, 'jyperK =', jyperK
 
   ; ***** observed source information *****
 
@@ -1725,9 +1781,14 @@ if (not keyword_set(verbose)) then verbose = 0
          result=CALL_EXTERNAL(libfile, $
                              'idl_uvputvr',unit,'r','inttime',inttime,one)
 
-         truedate = ytla_getdate(ytla, i)
-         juldate, truedate, jd
-         jd       = jd + 2400000.d0
+         ;truedate = ytla_getdate(ytla, i)
+         ;juldate, truedate, jd
+         ;jd       = jd + 2400000.d0
+
+	 ;jd       = ytla_getjd(ytla, i)
+	 jd  = ytla.jd[i]
+	 ;print, 'i = ', i, 'jd = ', jd
+
          ut       = double( ((jd-0.5) - floor(jd-0.5)) * 2. * !PI)
          result=CALL_EXTERNAL(libfile, $
                              'idl_uvputvr',unit,'d','ut',ut, one)
@@ -1763,6 +1824,10 @@ if (not keyword_set(verbose)) then verbose = 0
          ; narrowband
          ytla_gettsys, ytla, nants, nbtsys, nbflag, tsys, solflag, ant_flag
          tsys2 = reform(tsys, nants*nspect)
+
+	;print, 'integration', i, 'antenna Tsys:'
+	;print, wtsys2
+	;print, tsys2
 
        ; Exporting Tsys
        result=CALL_EXTERNAL(libfile, $
@@ -1829,8 +1894,9 @@ if (not keyword_set(verbose)) then verbose = 0
                chancount = 0
                for k = 0, ( nspect - 1 ) do begin
 
-                 data = ytla_getcomplexvis( ytla, i, j, sideband, nschan[k])
-                 flags = make_array(numchan,/long, value=1)
+                 ;data = ytla_getcomplexvis( ytla, i, j, sideband, nschan[k])
+                 ;flags = make_array(numchan,/long, value=1)
+                 data = ytla_getcomplexvis( ytla, i, j, sideband, nschan[k], flags)
 
                  chancount = chancount + nschan[k]
 
