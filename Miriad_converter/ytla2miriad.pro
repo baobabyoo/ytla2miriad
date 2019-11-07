@@ -1931,5 +1931,67 @@ if (not keyword_set(verbose)) then verbose = 0
                      'idl_uvclose',unit)
 
 
+end
+
+
+
+
+pro run_convert, name
+    ;;; given the name, load all associated data into IDL
+    ;;; and convert them with ytla2miriad.pro
+    ;;; (X and Y; LSB and USB; 4 miriad folder in total)
+    ;;;
+    ;;; Input:
+    ;;;	    name	    a string to identify the data
+    ;;;			    e.g. W51-ab
+    ;;;
+    ;;;	Output:
+    ;;;	    <name>.X.lsb.mir
+    ;;;	    <name>.X.usb.mir
+    ;;;	    <name>.Y.lsb.mir
+    ;;;	    <name>.Y.usb.mir
+    ;;;
+
+    if (n_elements(name) eq 0) then stop, 'need to provide a name.'
+    bname = file_basename(name)
+    dname = file_dirname(name)
+
+
+    loc = name.indexof('.ytla')
+    if (loc gt -1) then begin		; strip trailing characters
+	name = name.remove(loc, -1)
+    endif
+
+    pols = ['X', 'Y']
+    nsb  = 2
+
+    foreach p, pols do begin
+	pname = '.ytla7' + p
+
+	; ytla input HDF name
+	fname = name + pname + '.mrgh5'
+	if (file_test(fname)) then begin
+	    print, fname, ' --> exists'
+	    load_ytla, ytla, fname
+
+	    for s = 0, nsb-1 do begin
+		if (s eq 0) then sb = 'lsb'
+		if (s eq 1) then sb = 'usb'
+		sname = '.' + sb
+
+		; miriad output dir name
+		oname = bname + '.' + p + sname + '.vis'
+		print, oname
+
+		ytla2miriad, ytla, dir=oname, sideband=sb
+	    endfor
+
+	endif else begin
+	    print, fname, ' --> not found'
+	endelse
+    endforeach
 
 end
+
+
+
