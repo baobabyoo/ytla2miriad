@@ -14,6 +14,7 @@ It depends on the external library files under the idl_sav directory.
                        Presently only permit outputing one source, one sideband (and 1 spectral window per sideband)
                        at a time. The velocity (vlsr) information is incorrect, which will be fixed when needed.
                        
+2019.Nov.07 (Kyle) : Included flag table and corrected various meta data including Tsys and primary beam. 
 
 
 ## Example of using the code:
@@ -41,6 +42,6 @@ fits in=ytla_clean op=xyout out=ytla_clean.fits
 
 fits in=ytla_residual op=xyout out=ytla_residual.fits
 
-### Frequently used Miriad tasks: uvlist, uvflag, uvputhd, uvplt, uvspec, prthd
+#### Frequently used Miriad tasks: uvlist, uvflag, uvputhd, uvplt, uvspec, prthd
 
-### Full task list: https://www.atnf.csiro.au/computing/software/miriad/taskindex.html
+#### Full task list: https://www.atnf.csiro.au/computing/software/miriad/taskindex.html
