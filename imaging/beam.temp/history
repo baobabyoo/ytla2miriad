@@ -1,0 +1,31 @@
+IDL/MIR-to-MIRIAD, Version: Beta
+based on library version xx-xx-xx
+Target Source: TEMP
+LO Frequency:        95.118906 GHz
+UVFLAG: Executed on: 2019-12-08T14:57:49.0
+UVFLAG: Command line inputs follow:
+UVFLAG:   vis=w51_usb
+UVFLAG:   select=ant(2)
+UVFLAG:   flagval=flag
+UVFLAG: Overview of flagging on visibility file w51_usb
+UVFLAG: Changed flags set to FALSE (data flagged as bad)
+UVFLAG: Total number of records selected: 300; out of 1050 records
+UVFLAG: Antennas used: 1,2,3,4,5,6,7
+UVFLAG: Counts of correlations within selected channels
+UVFLAG: channel   Originally  Currently
+UVFLAG: Good:              0          0    Changed to bad:          0
+UVFLAG: Bad:          307200     307200
+UVFLAG: wide      Originally  Currently
+UVFLAG: Good:              0          0    Changed to bad:          0
+UVFLAG: Bad:             300        300
+INVERT: Miriad invert: CVS Revision 1.12, 2012/05/25 12:53:15 UT
+INVERT: Executed on: 2019-12-08T14:57:49.0
+INVERT: Command line inputs follow:
+INVERT:   vis=w51_usb,w51_lsb
+INVERT:   map=map.temp
+INVERT:   beam=beam.temp
+INVERT:   options=mosaic,mfs,systemp
+INVERT:   robust=2.0
+INVERT:   cell=20
+INVERT:   imsize=64
+INVERT:   line=channel,400,100,1,1
