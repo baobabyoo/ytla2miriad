@@ -26,6 +26,7 @@ IDL> load_ytla, ytla, '../DATA/W51-ab.ytla7X.mrgh5'
 IDL> load_ytla, ytla, filename, /verbose
 
 IDL> ytla2miriad, ytla, dir='ytla_usb.miriad', sideband='usb'
+
 IDL> ytla2miriad, ytla, dir='ytla_lsb.miriad', sideband='lsb'
 
 
