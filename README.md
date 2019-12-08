@@ -16,6 +16,7 @@ It depends on the external library files under the idl_sav directory.
                        
 2019.Nov.07 (Kyle) : Included flag table and corrected various meta data including Tsys and primary beam. 
 
+2019.Dec.08 (Baobab) : Including a keyword to allow separating individual pointings to separated files.
 
 ## Example of using the code:
 
