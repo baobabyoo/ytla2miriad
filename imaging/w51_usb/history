@@ -1,8 +1,8 @@
 IDL/MIR-to-MIRIAD, Version: Beta
 based on library version xx-xx-xx
-Target Source: TEMP
+Target Source: w51
 LO Frequency:        95.118906 GHz
-UVFLAG: Executed on: 2019-12-08T14:57:49.0
+UVFLAG: Executed on: 2019-12-09T09:15:47.0
 UVFLAG: Command line inputs follow:
 UVFLAG:   vis=w51_usb
 UVFLAG:   select=ant(2)

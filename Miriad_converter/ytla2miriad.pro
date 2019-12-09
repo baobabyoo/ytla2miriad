@@ -159,6 +159,7 @@ ytla = create_struct(ytla, 'poffset', poff, 'ref_coord', rc, 'note_poff', $
                      'pointing offset dRA,dDEC in arcmin',                $
                      'note_rc', 'ref_coord RA,DEC in deg J2000')
 
+
 ; help, ytla
 
 h5f_close, fid
@@ -797,8 +798,6 @@ function ytla_getinttime, ytla, integration
 ;
 ; #################################################################
 
-   ; not yet implementing the actual information / place holder
-   ;inttime = 520d
    inttime = ytla.pointing[integration, 3] - ytla.pointing[integration, 2]
 
    return, inttime
@@ -824,7 +823,6 @@ function ytla_getjd, ytla, integration
 
    epoch = (ytla.pointing[integration, 2] + ytla.pointing[integration, 3]) / 2.d
    jd = systime(elapsed=epoch, /julian, /utc)
-   ;print, ytla.pointing[integration,2],  ytla.pointing[integration,3]
 
    return, jd
 end
@@ -1308,7 +1306,8 @@ pro ytla2miriad, ytla,                                                      $
                  ; libfile=libfile, 
                  state=state, $
                  smamiriad=smamiriad,  $
-                 ; trimflux=trimflux, 
+                 ; trimflux=trimflux,
+                 pntsplit=pntsplit, $
                  auto=auto
 ; ################################################################
 ;
@@ -1337,6 +1336,10 @@ pro ytla2miriad, ytla,                                                      $
 ;    libpath : [str] the path where the external library for exporting data locates.
 ;                    Default: '../idl_sav/'
 ;
+; Keyword :
+;    pntsplit : If set, split individual pointings to separated Miriad files.
+;               Files are indexed with integer numbers.
+;
 ;
 ; Example :
 ;
@@ -1346,7 +1349,7 @@ pro ytla2miriad, ytla,                                                      $
 
 
 ; common global
-;common data_set
+; common data_set
 
 
 ;; Physical constants
@@ -1355,11 +1358,6 @@ pro ytla2miriad, ytla,                                                      $
 ; ***** check verbose keyword *****
 
 if (not keyword_set(verbose)) then verbose = 0
-
-
-; ***** setting output file handle unit *****
-
-  unit=0
 
 
 ;; Setting path to the library file ------------------------------
@@ -1410,13 +1408,20 @@ if (not keyword_set(verbose)) then verbose = 0
      endif
   endelse
 
+  if ( KEYWORD_SET(pntsplit) ) then begin
+    print, "************************************************************************"
+    print, "***** Keywork pntsplit is set                                      *****"
+    print, "***** Will separate individual pointings to separated Miriad files *****"
+    print, "************************************************************************"
+  endif
+
 
 ; ***** observatory/telescope specific information ------
 
   telescop = 'YTLA'
   version  = 'YTLA 1.0'
 
-  ; currently using SMA's longitude and latitude  YTLA: Needs this meta data
+  ; currently using SMA's longitude and latitude  YTLA: Needs this meta data ; place holder
   YTLAlatitude = 19.82420526391d0
   YTLAlongitude = (360. - (155.+(28.+37.20394/60.)/60.0))/360.*2.*!PI
   YTLAlatitude = YTLAlatitude * 2 * !PI / 360.0
@@ -1425,7 +1430,6 @@ if (not keyword_set(verbose)) then verbose = 0
 
     if (not keyword_set(polar)) then polar = 0
     mirpol = get_mirpol(polar)
-
 
   ; ***** obtaining LO info *****
 
@@ -1453,22 +1457,15 @@ if (not keyword_set(verbose)) then verbose = 0
     ; radius of antennae  YTLA: Needs this meta data
     rant = (1.182/2)
 
-    ; pb hwhm (= 16.985 * 345 / LO) is based on beam calculator on TEST CENTRAL YTLA: Needs this meta data
-    ; Presently scales from the SMA pbfwhm to ytla
-    ;;pbfwhm = float(2. * (16.985 * 345. / LO)) * ( 6d / 1.2d )  ; / place holder
-
     ; fitted beam width = 64.6 * lambda / D (in deg) 
     pbfwhm = 64.6 * (cvel_mks / (LO * 1.e9 * rant * 2d) ) * 3600.	; fwhm im arcsec
-    ;print, pbfwhm
 
-    ; get the assumed aperture efficiency   YTLA: Needs this meta data
-    ;;reff = 1.0
-    ;; reff = 0.5 will give approximately jyperK = 5000, which relates Tsys=200 to SEFD=1MJy
+    ; get the assumed aperture efficiency
+    ;reff = 0.5 will give approximately jyperK = 5000, which relates Tsys=200 to SEFD=1MJy
     reff = 0.5
 
     ; get jyperK information
     jyperK = get_jyperK(reff, rant)
-    ;print, 'jyperK =', jyperK
 
   ; ***** observed source information *****
 
@@ -1598,243 +1595,256 @@ if (not keyword_set(verbose)) then verbose = 0
 ;    print,"wwidth [GHz]",wwidth
 
   ; *** All header information prepared ***
-
-
-
-
-
   one=long(1)
 
-  print,"--- Creating/Opening new data directory ---"
+    PRINT,"--- READY TO CYCLE THROUGH ALL INTEGRATIONS ---"
+    unit = 0
+    for i = 0, ( ytla.nint - 1 ), 1 do begin
 
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvopen',dir,unit)
+        ; ***** setting output file handle unit *****
+        if ( KEYWORD_SET(pntsplit) ) then begin
+          dir  = source + '_' + sideband + '_' + strtrim( string(i), 1) + '.miriad'
+          print, ' - - - - -Outputting data into a new file- - - - - '
+          print, dir
+        endif
 
-  print,"--- Writing brief history entry ---"
+        ; control whether or not a new file is opened for output
+        if_newfile = 'no'
+        if (                           $    
+            ( KEYWORD_SET(pntsplit) )  $
+           ) then begin
+          if_newfile = 'yes'
+          unit = 0
+        endif
 
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_hisappend',unit)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_hiswrite',unit,'IDL/MIR-to-MIRIAD, Version: Beta')
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_hiswrite',unit,'based on library version xx-xx-xx')
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_hiswrite',unit,'Target Source: '+source)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_hiswrite',unit,'LO Frequency: '+string(LO)+' GHz')
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_hisclose',unit)
+        if ( i eq 0 ) then begin
+          if_newfile = 'yes'
+          unit = 0
+        endif
 
-  print,"--- Inserting observer header info ---"
+      if ( if_newfile eq 'yes' ) then begin
+        ;print,"--- Creating/Opening new data directory ---"
 
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'a','observer', 'Baobab')
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvopen',dir,unit)
 
-  print,"--- Inserting observatory specific header info ---"
+        ;print,"--- Writing brief history entry ---"
+  
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_hisappend',unit)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_hiswrite',unit,'IDL/MIR-to-MIRIAD, Version: Beta')
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_hiswrite',unit,'based on library version xx-xx-xx')
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_hiswrite',unit,'Target Source: '+source)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_hiswrite',unit,'LO Frequency: '+string(LO)+' GHz')
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_hisclose',unit)
 
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'a','telescop', telescop)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'a','version', version)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'d','latitud',YTLAlatitude,one)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'d','longitu',YTLAlongitude,one)
+        ;print,"--- Inserting observer header info ---"
+  
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'a','observer', 'Baobab')
+  
+        ;print,"--- Inserting observatory specific header info ---"
+  
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'a','telescop', telescop)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'a','version', version)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'d','latitud',YTLAlatitude,one)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'d','longitu',YTLAlongitude,one)
+  
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'i','nants',nants,one)
+       ;    result=CALL_EXTERNAL(libfile, $
+       ;                    'idl_uvputvr',unit,'r','jyperk',jyperk,one)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'r','pbfwhm',pbfwhm,one)
 
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'i','nants',nants,one)
-;    result=CALL_EXTERNAL(libfile, $
-;                     'idl_uvputvr',unit,'r','jyperk',jyperk,one)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'r','pbfwhm',pbfwhm,one)
+        ;print,"--- Inserting source header info ---"
+  
+          if (strlen(source) gt 8) then begin
+             print,'NOTICE!!! MIRIAD only allows source name with a maximum of 8 characters'
+             print,'Source name ',source,' in the header will be truncated into ',strmid(source,0,8)
+             source=strmid(source,0,8)
+          endif
+          source = strupcase(source)
+  
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'a','source',source)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'d','ra',srcra,one)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'d','dec',srcdec,one)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'r','epoch',float(epoch),one)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'d','obsra',obscoord[0],one)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'d','obsdec',obscoord[1],one)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'a','purpose','S')
+  
+          ; put primary beam type header
+          pb_string = 'gaus(' + string(pbfwhm, format='(f5.1)' ) + ')'
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'a','pbtype', pb_string)
+  
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'a','veltype',veltype)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'r','veldop',veldop,one)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'r','vsource',vsource,one)
+  
+        ;print,"--- Inserting observing setup header info ---"
+  
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'d','lo1',LO,one)
+  
+        ;print,"---         wide band channel header info ---"
+  
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'i','nwide',nwide,one)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'r','wfreq',wfreq,nwide)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'r','wwidth',abs(wwidth),nwide)
+  
+        ;print,"---       narrow band channel header info ---"
+  
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'i','numchan',numchan,one)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'i','nspect',nspect,one)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'d','restfreq',restfreq,nspect)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'d','sfreq',sfreq,nspect)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'d','sdf',sdf,nspect)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'i','nschan',nschan,nspect)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'i','ischan',ischan,nspect)
+  
+        ;print,"---              polarization header info ---"
+  
+  
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'i','npol',npol,one)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_wrhdi',unit,'npol',npol)
 
-  print,"--- Inserting source header info ---"
+        ;print,"---              fake antpos/corr header info ---"
+  
+          fakecormode = long(1)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'i','cormode',fakecormode,one)
+          fakecorfin  = float([100.,200.,300.,400.])
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'r','corfin',fakecorfin,4)
+          fakecorbw  = float([20.,20.])
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'r','corbw',fakecorbw,2)
+          fakeantpos = make_array(nants*3,/double,value=100.0)
+          result=CALL_EXTERNAL(libfile, $
+                           'idl_uvputvr',unit,'d','antpos',fakeantpos,nants*3)
 
-    if (strlen(source) gt 8) then begin
-       print,'NOTICE!!! MIRIAD only allows source name with a maximum of 8 characters'
-       print,'Source name ',source,' in the header will be truncated into ',strmid(source,0,8)
-       source=strmid(source,0,8)
-    endif
-    source = strupcase(source)
-
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'a','source',source)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'d','ra',srcra,one)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'d','dec',srcdec,one)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'r','epoch',epoch,one)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'d','obsra',obscoord[0],one)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'d','obsdec',obscoord[1],one)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'a','purpose','S')
-
-    ; put primary beam type header
-    pb_string = 'gaus(' + string(pbfwhm, format='(f5.1)' ) + ')'
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'a','pbtype', pb_string)
+        if_newfile = 'no'
+      endif ; finish opening new file and inserting header
 
 
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'a','veltype',veltype)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'r','veldop',veldop,one)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'r','vsource',vsource,one)
 
-  print,"--- Inserting observing setup header info ---"
-
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'d','lo1',LO,one)
-
-  print,"---         wide band channel header info ---"
-
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'i','nwide',nwide,one)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'r','wfreq',wfreq,nwide)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'r','wwidth',abs(wwidth),nwide)
-
-  print,"---       narrow band channel header info ---"
-
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'i','numchan',numchan,one)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'i','nspect',nspect,one)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'d','restfreq',restfreq,nspect)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'d','sfreq',sfreq,nspect)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'d','sdf',sdf,nspect)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'i','nschan',nschan,nspect)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'i','ischan',ischan,nspect)
-
-  print,"---              polarization header info ---"
-
-
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'i','npol',npol,one)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_wrhdi',unit,'npol',npol)
-
-  print,"---              fake antpos/corr header info ---"
-
-    fakecormode = long(1)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'i','cormode',fakecormode,one)
-    fakecorfin  = float([100.,200.,300.,400.])
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'r','corfin',fakecorfin,4)
-    fakecorbw  = float([20.,20.])
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'r','corbw',fakecorbw,2)
-    fakeantpos = make_array(nants*3,/double,value=100.0)
-    result=CALL_EXTERNAL(libfile, $
-                     'idl_uvputvr',unit,'d','antpos',fakeantpos,nants*3)
-
+    ; ###########################################################
 
     ; all_ints=uti_distinct(in[pil].int,nint,/many_repeat)
     ; int_list=all_ints(uniq(all_ints,sort(all_ints)))
 
-    PRINT,"--- READY TO CYCLE THROUGH ALL INTEGRATIONS ---"
-
-
-    for i = 0, ( ytla.nint - 1 ), 1 do begin
-
-       if (verbose) then print,"---  initialize antenna-based tsys matrices ---"
-
-
-       ;  wideband channel tsys
-       wtsys    = make_array(nants, nspect,/float,value=0.0)
-       wsolflag = make_array(nspect,/float,value=0.0)
-
-       ;  wideband antenna tsys flag
-       ant_wflag = make_array(nants, nspect,/int,value=0)
-
-       ;  temporary wideband tsys matrices
-       wbtsys  = make_array(nants,nants,1,value=0.0)
-       wbflag  = make_array(nants,nants,1,/int,value=0)
-
-       ;  narrowband channel tsys
-       tsys = make_array(nants,nspect,/float,value=0.0)
-       solflag = make_array(nspect,/float,value=0.0)
-
-       ;  narrowband antenna tsys flag
-       ant_flag = make_array(nants,nspect,/int,value=0)
-
-       ;  temporary narrowband matrices
-       nbtsys  = make_array(nants,nants,nspect,/float,value=0.0)
-       nbflag  = make_array(nants,nants,nspect,/int,value=0)
-
-
-       if (verbose) then print,"---          integration time header info ---"
-
-         ; obtaining integration time information for integration i / place holder
-         inttime = float( ytla_getinttime(ytla, i) )
+         if (verbose) then print,"---  initialize antenna-based tsys matrices ---"
+  
+  
+         ;  wideband channel tsys
+         wtsys    = make_array(nants, nspect,/float,value=0.0)
+         wsolflag = make_array(nspect,/float,value=0.0)
+  
+         ;  wideband antenna tsys flag
+         ant_wflag = make_array(nants, nspect,/int,value=0)
+  
+         ;  temporary wideband tsys matrices
+         wbtsys  = make_array(nants,nants,1,value=0.0)
+         wbflag  = make_array(nants,nants,1,/int,value=0)
+  
+         ;  narrowband channel tsys
+         tsys = make_array(nants,nspect,/float,value=0.0)
+         solflag = make_array(nspect,/float,value=0.0)
+  
+         ;  narrowband antenna tsys flag
+         ant_flag = make_array(nants,nspect,/int,value=0)
+  
+         ;  temporary narrowband matrices
+         nbtsys  = make_array(nants,nants,nspect,/float,value=0.0)
+         nbflag  = make_array(nants,nants,nspect,/int,value=0)
+  
+  
+         if (verbose) then print,"---          integration time header info ---"
+  
+           ; obtaining integration time information for integration i / place holder
+           inttime = float( ytla_getinttime(ytla, i) )
+           result=CALL_EXTERNAL(libfile, $
+                               'idl_uvputvr',unit,'r','inttime',inttime,one)
+  
+  	 jd  = ytla.jd[i]
+  
+           ut       = double( ((jd-0.5) - floor(jd-0.5)) * 2. * !PI)
+           result=CALL_EXTERNAL(libfile, $
+                               'idl_uvputvr',unit,'d','ut',ut, one)
+  
+           jullst,jd,YTLAlongitude,lst
+           result=CALL_EXTERNAL(libfile, $
+                               'idl_uvputvr',unit,'d','lst',lst, one)
+  
+  
+         if (mosaic_flag eq 1) then begin
+           dra  = float(ytla.poffset[0, i])  ; ra  offset in arcmin units
+           ddec = float(ytla.poffset[1, i])  ; dec offset in arcmin units
+           dra =  dra  * float(2. * !PI / (60. * 360.))
+           ddec = ddec * float(2. * !PI / (60. * 360.))
+  
+           result=CALL_EXTERNAL(libfile, $
+                          'idl_uvputvr',unit,'r','dra',dra, one)
+  
+           result=CALL_EXTERNAL(libfile, $
+                          'idl_uvputvr',unit,'r','ddec',ddec, one)
+         endif
+  
+         if (verbose) then print,'  - cycling through all baselines to get baseline-based tsys  -'
+         delta_nu = sdf[0] * 1e9
+         ytla_wttoTsys, ytla, i, wbtsys, wbflag, delta_nu, inttime, jyperK, sideband, ytla_baselines
+         ytla_wttoTsys, ytla, i, nbtsys, nbflag, delta_nu, inttime, jyperK, sideband, ytla_baselines
+  
+         ; Solving the antenna-based tsys values
+  
+           ; wideband
+           ytla_getwtsys, ytla, nants, wbtsys, wbflag, wtsys, wsolflag, ant_wflag
+           wtsys2 = reform( wtsys, nants*1 )
+           ; narrowband
+           ytla_gettsys, ytla, nants, nbtsys, nbflag, tsys, solflag, ant_flag
+           tsys2 = reform(tsys, nants*nspect)
+  
+  
+         ; Exporting Tsys
          result=CALL_EXTERNAL(libfile, $
-                             'idl_uvputvr',unit,'r','inttime',inttime,one)
-
-         ;truedate = ytla_getdate(ytla, i)
-         ;juldate, truedate, jd
-         ;jd       = jd + 2400000.d0
-
-	 ;jd       = ytla_getjd(ytla, i)
-	 jd  = ytla.jd[i]
-	 ;print, 'i = ', i, 'jd = ', jd
-
-         ut       = double( ((jd-0.5) - floor(jd-0.5)) * 2. * !PI)
+                              'idl_uvputvr',unit,'r','wsystemp',wtsys2, long(n_elements(wtsys2)))
+  
          result=CALL_EXTERNAL(libfile, $
-                             'idl_uvputvr',unit,'d','ut',ut, one)
+                              'idl_uvputvr',unit,'r','systemp',tsys2, long(n_elements(tsys2)))
 
-         jullst,jd,YTLAlongitude,lst
-         result=CALL_EXTERNAL(libfile, $
-                             'idl_uvputvr',unit,'d','lst',lst, one)
-
-
-       if (mosaic_flag eq 1) then begin
-         dra  = float(ytla.poffset[0, i])  ; ra  offset in arcmin units
-         ddec = float(ytla.poffset[1, i])  ; dec offset in arcmin units
-         dra =  dra  * float(2. * !PI / (60. * 360.))
-         ddec = ddec * float(2. * !PI / (60. * 360.))
-
-         result=CALL_EXTERNAL(libfile, $
-                        'idl_uvputvr',unit,'r','dra',dra, one)
-
-         result=CALL_EXTERNAL(libfile, $
-                        'idl_uvputvr',unit,'r','ddec',ddec, one)
-       endif
-
-       if (verbose) then print,'  - cycling through all baselines to get baseline-based tsys  -'
-       delta_nu = sdf[0] * 1e9
-       ytla_wttoTsys, ytla, i, wbtsys, wbflag, delta_nu, inttime, jyperK, sideband, ytla_baselines
-       ytla_wttoTsys, ytla, i, nbtsys, nbflag, delta_nu, inttime, jyperK, sideband, ytla_baselines
-
-       ; Solving the antenna-based tsys values
-
-         ; wideband
-         ytla_getwtsys, ytla, nants, wbtsys, wbflag, wtsys, wsolflag, ant_wflag
-         wtsys2 = reform( wtsys, nants*1 )
-         ; narrowband
-         ytla_gettsys, ytla, nants, nbtsys, nbflag, tsys, solflag, ant_flag
-         tsys2 = reform(tsys, nants*nspect)
-
-	;print, 'integration', i, 'antenna Tsys:'
-	;print, wtsys2
-	;print, tsys2
-
-       ; Exporting Tsys
-       result=CALL_EXTERNAL(libfile, $
-                            'idl_uvputvr',unit,'r','wsystemp',wtsys2, long(n_elements(wtsys2)))
-
-       result=CALL_EXTERNAL(libfile, $
-                            'idl_uvputvr',unit,'r','systemp',tsys2, long(n_elements(tsys2)))
 
        if (verbose) then print,'  - cycling through all baselines again to store header/data -'
 
@@ -1922,13 +1932,20 @@ if (not keyword_set(verbose)) then verbose = 0
 
        endfor ; loop for baseline
 
+      if ( KEYWORD_SET(pntsplit) ) then begin
+        print,"--- Closing up data directory ---"
+        result=CALL_EXTERNAL(libfile, $
+                         'idl_uvclose',unit)
+      endif
+
     endfor ; loop for integration
 
 
-  print,"--- Closing up data directory ---"
-
+  if ( not KEYWORD_SET(pntsplit) ) then begin
+    print,"--- Closing up data directory ---"
     result=CALL_EXTERNAL(libfile, $
                      'idl_uvclose',unit)
+  endif
 
 
 end

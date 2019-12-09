@@ -22,11 +22,22 @@ It depends on the external library files under the idl_sav directory.
 
 IDL> .compile ytla2miriad.pro
 
-IDL> filename = 'W51-ab.ytla7X.mrgh5'
+IDL> load_ytla, ytla, '../DATA/W51-ab.ytla7X.mrgh5'
 
 IDL> load_ytla, ytla, filename, /verbose
 
-IDL> ytla2miriad, ytla, dir='ytla_lsb.miriad', sideband='lsb'
+#### Outtputing individual pointings to separated files
+
+IDL> ytla2miriad, ytla, dir='ytla_usb.miriad', sideband='usb', /pntsplit
+
+IDL> ytla2miriad, ytla, dir='ytla_lsb.miriad', sideband='lsb', /pntsplit
+
+#### Outputting all data to the same file
+
+IDL> ytla2miriad, ytla, dir='ytla_usb.miriad', sideband='usb', /pntsplit
+
+IDL> ytla2miriad, ytla, dir='ytla_lsb.miriad', sideband='lsb', /pntsplit
+
 
 
 ## Example of Miriad imaging command (under linux command lines)
