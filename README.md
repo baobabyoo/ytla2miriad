@@ -22,21 +22,27 @@ It depends on the external library files under the idl_sav directory.
 
 IDL> .compile ytla2miriad.pro
 
-IDL> load_ytla, ytla, '../DATA/W51-ab.ytla7X.mrgh5'
+IDL> load_ytla, ytla, '../DATA/w51_2019/mrgh5/W51-ab.ytla7X.mrgh5'
+
+IDL> load_ytla, ytla, '../DATA/w51_2019/mrgh5/W51-ab.ytla7Y.mrgh5'
 
 IDL> load_ytla, ytla, filename, /verbose
 
 #### Outtputing individual pointings to separated files
 
-IDL> ytla2miriad, ytla, dir='ytla_usb.miriad', sideband='usb', /pntsplit
+IDL> ytla2miriad, ytla, dir='ytla_usb.miriad', sideband='usb', source='w51XX', /pntsplit, /intsplit
 
-IDL> ytla2miriad, ytla, dir='ytla_lsb.miriad', sideband='lsb', /pntsplit
+IDL> ytla2miriad, ytla, dir='ytla_lsb.miriad', sideband='lsb', source='w51XX', /pntsplit, /intsplit
+
+IDL> ytla2miriad, ytla, dir='ytla_usb.miriad', sideband='usb', source='w51YY', /pntsplit, /intsplit
+
+IDL> ytla2miriad, ytla, dir='ytla_lsb.miriad', sideband='lsb', source='w51YY', /pntsplit, /intsplit
 
 #### Outputting all data to the same file
 
-IDL> ytla2miriad, ytla, dir='ytla_usb.miriad', sideband='usb', /pntsplit
+IDL> ytla2miriad, ytla, dir='ytla_usb.miriad', sideband='usb'
 
-IDL> ytla2miriad, ytla, dir='ytla_lsb.miriad', sideband='lsb', /pntsplit
+IDL> ytla2miriad, ytla, dir='ytla_lsb.miriad', sideband='lsb'
 
 
 

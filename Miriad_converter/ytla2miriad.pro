@@ -1605,7 +1605,7 @@ if (not keyword_set(verbose)) then verbose = 0
 
         ; ***** setting output file handle unit *****
         if ( KEYWORD_SET(pntsplit) ) then begin
-          dir  = source + '_' + sideband + '_' + strtrim( string(i), 1) + '.miriad'
+          dir  = source + '_' + sideband + '.' + strtrim( string(i), 1) + '.miriad'
           if (verbose) then print, ' - - - - -Outputting data into a new file- - - - - '
           if (verbose) then print, dir
         endif
