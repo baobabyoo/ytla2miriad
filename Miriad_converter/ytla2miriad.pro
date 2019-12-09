@@ -898,10 +898,8 @@ pro ytla_wttoTsys, ytla, integration, wbtsys, wbflag, delta_nu, delta_t, jyperK,
     ant1 = ytla_baselines[j, 0]
     ant2 = ytla_baselines[j, 1]
 
-    ;wt = sqrt(  total( ytla.weight[integration, *, j, sidebandid]^2 )  )
     wt = sqrt(  total( ytla.weight[integration, 10:510, j, sidebandid] )  )
     Var = (1d / wt)
-    ;Tsysbl = sqrt(   ( Var * 2d * delta_nu * delta_t) / (jyperK^2d)   )
     Tsysbl = sqrt(   ( Var * 500d * delta_nu * delta_t)  ) / jyperK
 
 
@@ -917,11 +915,6 @@ pro ytla_wttoTsys, ytla, integration, wbtsys, wbflag, delta_nu, delta_t, jyperK,
 
 
   endfor
-
-  ; debug
-  ;print, 'i = ', integration
-  ;print, 'Tsys = ', wbtsys
-
 
 end
 
@@ -1236,7 +1229,6 @@ function ytla_getpreamble, ytla, intid, blid, LO, ytla_baselines
   ; visibility header/data
   preamble[0]   = -( ( ytla.blmeter[intid,0,blid] / kilowavelength_mks ) * 1e3 ) / LO
   preamble[1]   = -( ( ytla.blmeter[intid,1,blid] / kilowavelength_mks ) * 1e3 ) / LO
-  ;preamble[2]   = 2451545.0d0 ; ytla.time[intid] ; tentative, needs to convert to jd
   preamble[2]   = ytla.jd[intid]
 
   ant1 = ytla_baselines[blid, 0]
@@ -1308,6 +1300,7 @@ pro ytla2miriad, ytla,                                                      $
                  smamiriad=smamiriad,  $
                  ; trimflux=trimflux,
                  pntsplit=pntsplit, $
+                 intsplit=intsplit, $
                  auto=auto
 ; ################################################################
 ;
@@ -1339,6 +1332,11 @@ pro ytla2miriad, ytla,                                                      $
 ; Keyword :
 ;    pntsplit : If set, split individual pointings to separated Miriad files.
 ;               Files are indexed with integer numbers.
+;
+;    intsplit : If set, will split individual integrations into two.
+;               This is to cheat Miriad. Miriad does not operate correctly if
+;               a file only has a single integration.
+;               This keyword option can only be activated when /pntsplit is activated.
 ;
 ;
 ; Example :
@@ -1412,6 +1410,10 @@ if (not keyword_set(verbose)) then verbose = 0
     print, "************************************************************************"
     print, "***** Keywork pntsplit is set                                      *****"
     print, "***** Will separate individual pointings to separated Miriad files *****"
+    if ( KEYWORD_SET(intsplit) ) then begin
+      print, "***** Keywork intsplit is set                                      *****"
+      print, "***** Will separate individual pointings to separated Miriad files *****"
+    endif
     print, "************************************************************************"
   endif
 
@@ -1604,8 +1606,8 @@ if (not keyword_set(verbose)) then verbose = 0
         ; ***** setting output file handle unit *****
         if ( KEYWORD_SET(pntsplit) ) then begin
           dir  = source + '_' + sideband + '_' + strtrim( string(i), 1) + '.miriad'
-          print, ' - - - - -Outputting data into a new file- - - - - '
-          print, dir
+          if (verbose) then print, ' - - - - -Outputting data into a new file- - - - - '
+          if (verbose) then print, dir
         endif
 
         ; control whether or not a new file is opened for output
@@ -1763,8 +1765,6 @@ if (not keyword_set(verbose)) then verbose = 0
 
     ; ###########################################################
 
-    ; all_ints=uti_distinct(in[pil].int,nint,/many_repeat)
-    ; int_list=all_ints(uniq(all_ints,sort(all_ints)))
 
          if (verbose) then print,"---  initialize antenna-based tsys matrices ---"
   
@@ -1794,155 +1794,149 @@ if (not keyword_set(verbose)) then verbose = 0
   
          if (verbose) then print,"---          integration time header info ---"
   
-           ; obtaining integration time information for integration i / place holder
+           ; obtaining integration time information for integration i
            inttime = float( ytla_getinttime(ytla, i) )
-           result=CALL_EXTERNAL(libfile, $
-                               'idl_uvputvr',unit,'r','inttime',inttime,one)
-  
-  	 jd  = ytla.jd[i]
-  
-           ut       = double( ((jd-0.5) - floor(jd-0.5)) * 2. * !PI)
-           result=CALL_EXTERNAL(libfile, $
-                               'idl_uvputvr',unit,'d','ut',ut, one)
-  
-           jullst,jd,YTLAlongitude,lst
-           result=CALL_EXTERNAL(libfile, $
-                               'idl_uvputvr',unit,'d','lst',lst, one)
-  
-  
-         if (mosaic_flag eq 1) then begin
-           dra  = float(ytla.poffset[0, i])  ; ra  offset in arcmin units
-           ddec = float(ytla.poffset[1, i])  ; dec offset in arcmin units
-           dra =  dra  * float(2. * !PI / (60. * 360.))
-           ddec = ddec * float(2. * !PI / (60. * 360.))
-  
-           result=CALL_EXTERNAL(libfile, $
-                          'idl_uvputvr',unit,'r','dra',dra, one)
-  
-           result=CALL_EXTERNAL(libfile, $
-                          'idl_uvputvr',unit,'r','ddec',ddec, one)
+
+         intrepeats = 1
+         if ( KEYWORD_SET(intsplit) ) then begin
+           inttime = inttime / 2d
+           inttime = float(inttime)
+           intrepeats = 2
          endif
-  
-         if (verbose) then print,'  - cycling through all baselines to get baseline-based tsys  -'
-         delta_nu = sdf[0] * 1e9
-         ytla_wttoTsys, ytla, i, wbtsys, wbflag, delta_nu, inttime, jyperK, sideband, ytla_baselines
-         ytla_wttoTsys, ytla, i, nbtsys, nbflag, delta_nu, inttime, jyperK, sideband, ytla_baselines
-  
-         ; Solving the antenna-based tsys values
-  
-           ; wideband
-           ytla_getwtsys, ytla, nants, wbtsys, wbflag, wtsys, wsolflag, ant_wflag
-           wtsys2 = reform( wtsys, nants*1 )
-           ; narrowband
-           ytla_gettsys, ytla, nants, nbtsys, nbflag, tsys, solflag, ant_flag
-           tsys2 = reform(tsys, nants*nspect)
-  
-  
-         ; Exporting Tsys
-         result=CALL_EXTERNAL(libfile, $
-                              'idl_uvputvr',unit,'r','wsystemp',wtsys2, long(n_elements(wtsys2)))
-  
-         result=CALL_EXTERNAL(libfile, $
-                              'idl_uvputvr',unit,'r','systemp',tsys2, long(n_elements(tsys2)))
 
-
-       if (verbose) then print,'  - cycling through all baselines again to store header/data -'
-
-       for j = 0, ( ytla.nbsl - 1 ) do begin
-         for jpol = 0, ( ytla.npol -1 ) do begin
-
-               ; exporting polarization code
-               thispol = mirpol[all_pol[jpol]]
+         for intrep = 0, intrepeats-1, 1 do begin ; # This for loop permits separating one integration into 
+                                             ; # intrepeats times
+               
                result=CALL_EXTERNAL(libfile, $
-                                    'idl_uvputvr',unit,'i','pol',thispol, one)
-
-               ; setting visibility header
-               preamble = ytla_getpreamble(ytla, i, j, LO, ytla_baselines)
-
-               wdata=make_array(nwide,/complex)
-               wflags = make_array(nwide,/long, value=0)
-
-               data=make_array(numchan,/complex)
-               flags = make_array(numchan,/long, value=0)
-
-               chunkcount = 0
-               chancount  = 0
-
-               ; *** wide bands ***
-               if (verbose) then print,'  - continuum channel -'
-
-               for k = 0, ( nsb - 1 ) do begin
-
-                 
-                 if (sideband eq 'lsb') then sidebandid = 0 ; lsb
-                 if (sideband eq 'usb') then sidebandid = 1 ; usb
-
-;                 if (ncount gt 0) then begin
-;                   uti_conv_apc, complexpair, bl[pbl[l[m[n[0]]]]].ampave,-bl[pbl[l[m[n[0]]]]].phaave, /complex
-;                   wdata[tosb]=complexpair
-;                   wflags[tosb]=(1+re.wts[prl[l[m[n]]]]/abs(re.wts[prl[l[m[n]]]]))/2 * ant_wflag[(ant1-1),tosb]*ant_wflag[(ant2-1),tosb]
-;                 endif
-                  wdata[0] = ytla.cross[i,0,j,sidebandid]
-
-                 ;if (e.debug eq 1) then begin
-                 ;  if (wflags[tosb] eq 0) then print, "wideband ",tosb," is flagged at int", int_list[i]
-                 ;endif
-               endfor
-
-               ;if (keyword_set(oldweight)) then begin
-               ;  temp_jyperk = jyperk
-               ;endif else begin
-               ;  recweight = sp[psl[l[m[n[0]]]]].wt
-               ;  recint = sp[psl[l[m[n[0]]]]].integ
-               ;  temp_jyperk = sqrt(2*recint*abs(wwidth[tosb])*1e9/(recweight * (wtsys[ant1-1,tosb]*wtsys[ant2-1,tosb])))
-               ;endelse
-
-
-               ; *** narrow bands ***
-               if (verbose) then print,'  - spectral window -'
-
-               chancount = 0
-               for k = 0, ( nspect - 1 ) do begin
-
-                 ;data = ytla_getcomplexvis( ytla, i, j, sideband, nschan[k])
-                 ;flags = make_array(numchan,/long, value=1)
-                 data = ytla_getcomplexvis( ytla, i, j, sideband, nschan[k], flags)
-
-                 chancount = chancount + nschan[k]
-
-;                recweight = sp[psl[l[m[n[0]]]]].wt
-;                recint = sp[psl[l[m[n[0]]]]].integ
-;                temp_jyperk = sqrt(2*recint*abs(sdf[k])*1e9/(recweight * (tsys2[ant1-1]*tsys2[ant2-1])))
-
-               endfor
-
-
-
+                                   'idl_uvputvr',unit,'r','inttime',inttime,one)
+      
+      	       jd       = ytla.jd[i]  
+               jd_interval = ( double(inttime) / 86400d ) / double(intrepeats)
+               if (intrepeats eq 2) then begin
+                 jd = double(ytla.jd[i]) - ( 0.5d - double(intrep) )  * jd_interval
+               endif
+               ut       = double( ((jd-0.5) - floor(jd-0.5)) * 2. * !PI)
                result=CALL_EXTERNAL(libfile, $
-                                    'idl_uvputvr',unit,'r','jyperk', jyperK, one)
-
+                                   'idl_uvputvr',unit,'d','ut',ut, one)
+      
+               jullst,jd,YTLAlongitude,lst
                result=CALL_EXTERNAL(libfile, $
-                                    'idl_uvwwrite',unit,wdata,wflags,nwide)
-
+                                   'idl_uvputvr',unit,'d','lst',lst, one)
+      
+      
+             if (mosaic_flag eq 1) then begin
+               dra  = float(ytla.poffset[0, i])  ; ra  offset in arcmin units
+               ddec = float(ytla.poffset[1, i])  ; dec offset in arcmin units
+               dra =  dra  * float(2. * !PI / (60. * 360.))
+               ddec = ddec * float(2. * !PI / (60. * 360.))
+      
                result=CALL_EXTERNAL(libfile, $
-                                    'idl_uvwrite',unit,preamble,data,flags,numchan)
+                              'idl_uvputvr',unit,'r','dra',dra, one)
+      
+               result=CALL_EXTERNAL(libfile, $
+                              'idl_uvputvr',unit,'r','ddec',ddec, one)
+             endif
+      
+             if (verbose) then print,'  - cycling through all baselines to get baseline-based tsys  -'
+             delta_nu = sdf[0] * 1e9
+             ytla_wttoTsys, ytla, i, wbtsys, wbflag, delta_nu, inttime, jyperK, sideband, ytla_baselines
+             ytla_wttoTsys, ytla, i, nbtsys, nbflag, delta_nu, inttime, jyperK, sideband, ytla_baselines
+      
+             ; Solving the antenna-based tsys values
+      
+               ; wideband
+               ytla_getwtsys, ytla, nants, wbtsys, wbflag, wtsys, wsolflag, ant_wflag
+               wtsys2 = reform( wtsys, nants*1 )
+               ; narrowband
+               ytla_gettsys, ytla, nants, nbtsys, nbflag, tsys, solflag, ant_flag
+               tsys2 = reform(tsys, nants*nspect)
+    
+      
+             ; Exporting Tsys
+             result=CALL_EXTERNAL(libfile, $
+                                  'idl_uvputvr',unit,'r','wsystemp',wtsys2, long(n_elements(wtsys2)))
+      
+             result=CALL_EXTERNAL(libfile, $
+                                  'idl_uvputvr',unit,'r','systemp',tsys2, long(n_elements(tsys2)))
+    
+    
+    
+           if (verbose) then print,'  - cycling through all baselines again to store header/data -'
+           for j = 0, ( ytla.nbsl - 1 ) do begin
+             for jpol = 0, ( ytla.npol -1 ) do begin
+    
+                   ; exporting polarization code
+                   thispol = mirpol[all_pol[jpol]]
+                   result=CALL_EXTERNAL(libfile, $
+                                        'idl_uvputvr',unit,'i','pol',thispol, one)
+    
+                   ; setting visibility header
+                   preamble = ytla_getpreamble(ytla, i, j, LO, ytla_baselines)
 
+                   if (intrepeats eq 2) then begin ; correct time stamp when splitting one integration into two
+                     preamble[2] =  double(ytla.jd[i]) - ( 0.5d - double(intrep) )  * jd_interval
+                   endif
+ 
+                   wdata=make_array(nwide,/complex)
+                   wflags = make_array(nwide,/long, value=0)
+    
+                   data=make_array(numchan,/complex)
+                   flags = make_array(numchan,/long, value=0)
+    
+                   chunkcount = 0
+                   chancount  = 0
+    
+                   ; *** wide bands ***
+                   if (verbose) then print,'  - continuum channel -'
+    
+                   for k = 0, ( nsb - 1 ) do begin
+    
+                     
+                     if (sideband eq 'lsb') then sidebandid = 0 ; lsb
+                     if (sideband eq 'usb') then sidebandid = 1 ; usb
+    
+                      wdata[0] = ytla.cross[i,0,j,sidebandid]
+    
+                   endfor
+    
+                   ; *** narrow bands ***
+                   if (verbose) then print,'  - spectral window -'
+    
+                   chancount = 0
+                   for k = 0, ( nspect - 1 ) do begin
+    
+                     data = ytla_getcomplexvis( ytla, i, j, sideband, nschan[k], flags)
+                     chancount = chancount + nschan[k]
+    
+                   endfor
+    
+    
 
-         endfor ; loop for polarization
+                   result=CALL_EXTERNAL(libfile, $
+                                        'idl_uvputvr',unit,'r','jyperk', jyperK, one)
 
-       endfor ; loop for baseline
+                   result=CALL_EXTERNAL(libfile, $
+                                        'idl_uvwwrite',unit,wdata,wflags,nwide)
+    
+                   result=CALL_EXTERNAL(libfile, $
+                                        'idl_uvwrite',unit,preamble,data,flags,numchan)
+    
+    
+             endfor ; loop for polarization
+           endfor ; loop for baseline
+          endfor  ; loop for intrepeats    
 
-      if ( KEYWORD_SET(pntsplit) ) then begin
-        print,"--- Closing up data directory ---"
-        result=CALL_EXTERNAL(libfile, $
-                         'idl_uvclose',unit)
-      endif
+          if ( KEYWORD_SET(pntsplit) ) then begin
+            if (verbose) then print,"--- Closing up data directory ---"
+            result=CALL_EXTERNAL(libfile, $
+                             'idl_uvclose',unit)
+          endif
 
     endfor ; loop for integration
 
 
   if ( not KEYWORD_SET(pntsplit) ) then begin
-    print,"--- Closing up data directory ---"
+    if (verbose) then print,"--- Closing up data directory ---"
     result=CALL_EXTERNAL(libfile, $
                      'idl_uvclose',unit)
   endif

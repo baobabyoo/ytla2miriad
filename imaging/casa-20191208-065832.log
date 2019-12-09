@@ -59,3 +59,31 @@
 2019-12-09 01:16:03	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
 2019-12-09 01:16:03	INFO	viewer::::	##### End Task: viewer               #####
 2019-12-09 01:16:03	INFO	viewer::::+	##########################################
+2019-12-09 01:41:14	INFO	viewer::::	
+2019-12-09 01:41:14	INFO	viewer::::+	##########################################
+2019-12-09 01:41:14	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 01:41:14	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 01:41:14	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 01:41:14	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 01:41:14	INFO	viewer::::+	##########################################
+2019-12-09 02:20:07	INFO	viewer::::	
+2019-12-09 02:20:07	INFO	viewer::::+	##########################################
+2019-12-09 02:20:07	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 02:20:07	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 02:20:07	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 02:20:08	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 02:20:08	INFO	viewer::::+	##########################################
+2019-12-09 02:25:13	INFO	viewer::::	
+2019-12-09 02:25:13	INFO	viewer::::+	##########################################
+2019-12-09 02:25:13	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 02:25:13	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 02:25:13	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 02:25:13	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 02:25:13	INFO	viewer::::+	##########################################
+2019-12-09 02:51:13	INFO	viewer::::	
+2019-12-09 02:51:13	INFO	viewer::::+	##########################################
+2019-12-09 02:51:13	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 02:51:13	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 02:51:13	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 02:51:14	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 02:51:14	INFO	viewer::::+	##########################################
