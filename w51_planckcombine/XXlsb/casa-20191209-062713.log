@@ -1,0 +1,251 @@
+
+2019-12-09 06:27:15	INFO	::casa	
+2019-12-09 06:27:15	INFO	::casa	Checking telemetry submission interval
+2019-12-09 06:27:15	INFO	::casa	Telemetry submit interval not reached. Not submitting data.
+2019-12-09 06:27:15	INFO	::casa	Next telemetry data submission in: 6 days, 0:31:23.071787
+2019-12-09 06:27:15	INFO	::casa	CASA Version  5.6.0-60  
+2019-12-09 06:27:20	INFO	viewer::::	
+2019-12-09 06:27:20	INFO	viewer::::+	##########################################
+2019-12-09 06:27:20	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 06:27:20	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 06:27:20	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 06:27:20	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 06:27:20	INFO	viewer::::+	##########################################
+2019-12-09 06:28:49	INFO	viewer::::	
+2019-12-09 06:28:49	INFO	viewer::::+	##########################################
+2019-12-09 06:28:49	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 06:28:49	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 06:28:49	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 06:28:50	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 06:28:50	INFO	viewer::::+	##########################################
+2019-12-09 06:30:37	INFO	viewer::::	
+2019-12-09 06:30:37	INFO	viewer::::+	##########################################
+2019-12-09 06:30:37	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 06:30:37	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 06:30:37	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 06:30:37	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 06:30:37	INFO	viewer::::+	##########################################
+2019-12-09 06:35:39	INFO	viewer::::	
+2019-12-09 06:35:39	INFO	viewer::::+	##########################################
+2019-12-09 06:35:39	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 06:35:39	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 06:35:39	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 06:35:40	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 06:35:40	INFO	viewer::::+	##########################################
+2019-12-09 06:37:50	INFO	viewer::::	
+2019-12-09 06:37:50	INFO	viewer::::+	##########################################
+2019-12-09 06:37:50	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 06:37:50	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 06:37:50	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 06:37:51	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 06:37:51	INFO	viewer::::+	##########################################
+2019-12-09 06:40:06	INFO	viewer::::	
+2019-12-09 06:40:06	INFO	viewer::::+	##########################################
+2019-12-09 06:40:06	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 06:40:06	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 06:40:06	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 06:40:07	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 06:40:07	INFO	viewer::::+	##########################################
+2019-12-09 06:42:10	INFO	viewer::::	
+2019-12-09 06:42:10	INFO	viewer::::+	##########################################
+2019-12-09 06:42:10	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 06:42:10	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 06:42:10	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 06:42:11	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 06:42:11	INFO	viewer::::+	##########################################
+2019-12-09 08:10:14	INFO	viewer::::	
+2019-12-09 08:10:14	INFO	viewer::::+	##########################################
+2019-12-09 08:10:14	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 08:10:14	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 08:10:14	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 08:10:14	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 08:10:14	INFO	viewer::::+	##########################################
+2019-12-09 08:13:37	INFO	viewer::::	
+2019-12-09 08:13:37	INFO	viewer::::+	##########################################
+2019-12-09 08:13:37	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 08:13:37	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 08:13:37	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 08:13:38	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 08:13:38	INFO	viewer::::+	##########################################
+2019-12-09 08:26:35	INFO	viewer::::	
+2019-12-09 08:26:35	INFO	viewer::::+	##########################################
+2019-12-09 08:26:35	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 08:26:35	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 08:26:35	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 08:26:35	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 08:26:35	INFO	viewer::::+	##########################################
+2019-12-09 08:27:44	INFO	viewer::::	
+2019-12-09 08:27:44	INFO	viewer::::+	##########################################
+2019-12-09 08:27:44	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 08:27:44	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 08:27:44	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 08:27:44	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 08:27:44	INFO	viewer::::+	##########################################
+2019-12-09 08:29:04	INFO	viewer::::	
+2019-12-09 08:29:04	INFO	viewer::::+	##########################################
+2019-12-09 08:29:04	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 08:29:04	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 08:29:04	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 08:29:04	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 08:29:04	INFO	viewer::::+	##########################################
+2019-12-09 08:29:56	INFO	viewer::::	
+2019-12-09 08:29:56	INFO	viewer::::+	##########################################
+2019-12-09 08:29:56	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 08:29:56	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 08:29:56	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 08:29:56	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 08:29:56	INFO	viewer::::+	##########################################
+2019-12-09 08:31:29	INFO	viewer::::	
+2019-12-09 08:31:29	INFO	viewer::::+	##########################################
+2019-12-09 08:31:29	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 08:31:29	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 08:31:29	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 08:31:29	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 08:31:29	INFO	viewer::::+	##########################################
+2019-12-09 08:33:07	INFO	viewer::::	
+2019-12-09 08:33:07	INFO	viewer::::+	##########################################
+2019-12-09 08:33:07	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 08:33:07	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 08:33:07	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 08:33:07	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 08:33:07	INFO	viewer::::+	##########################################
+2019-12-09 08:39:16	INFO	viewer::::	
+2019-12-09 08:39:16	INFO	viewer::::+	##########################################
+2019-12-09 08:39:16	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 08:39:16	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 08:39:16	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 08:39:16	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 08:39:16	INFO	viewer::::+	##########################################
+2019-12-09 08:43:43	INFO	viewer::::	
+2019-12-09 08:43:43	INFO	viewer::::+	##########################################
+2019-12-09 08:43:43	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 08:43:43	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 08:43:43	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 08:43:43	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 08:43:43	INFO	viewer::::+	##########################################
+2019-12-09 08:46:14	INFO	viewer::::	
+2019-12-09 08:46:14	INFO	viewer::::+	##########################################
+2019-12-09 08:46:14	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 08:46:14	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 08:46:14	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 08:46:14	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 08:46:14	INFO	viewer::::+	##########################################
+2019-12-11 04:38:22	INFO	viewer::::	
+2019-12-11 04:38:22	INFO	viewer::::+	##########################################
+2019-12-11 04:38:22	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-11 04:38:22	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-11 04:38:22	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-11 04:38:24	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-11 04:38:24	INFO	viewer::::+	##########################################
+2019-12-11 04:38:41	INFO	viewer::::	
+2019-12-11 04:38:41	INFO	viewer::::+	##########################################
+2019-12-11 04:38:41	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-11 04:38:41	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-11 04:38:41	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-11 04:38:41	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-11 04:38:41	INFO	viewer::::+	##########################################
+2019-12-11 04:39:40	INFO	FITSCoordinateUtil::fromFITSHeader	passing empty or nonexistant spectral Coordinate axis
+2019-12-11 04:39:40	INFO	FITSCoordinateUtil::fromFITSHeader	passing empty or nonexistant spectral Coordinate axis
+2019-12-11 04:49:21	INFO	viewer::::	
+2019-12-11 04:49:21	INFO	viewer::::+	##########################################
+2019-12-11 04:49:21	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-11 04:49:21	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-11 04:49:21	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-11 04:49:21	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-11 04:49:21	INFO	viewer::::+	##########################################
+2019-12-11 04:55:04	INFO	viewer::::	
+2019-12-11 04:55:04	INFO	viewer::::+	##########################################
+2019-12-11 04:55:04	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-11 04:55:04	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-11 04:55:04	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-11 04:55:04	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-11 04:55:04	INFO	viewer::::+	##########################################
+2019-12-11 04:57:10	WARN	WCCSAxisLabeller::setSpectralState (file ../../display/DisplayCanvas/WCCSAxisLabeller.cc, line 659)	Illegal spectral unit 
+2019-12-11 04:57:10	WARN	WCCSAxisLabeller::setSpectralState (file ../../display/DisplayCanvas/WCCSAxisLabeller.cc, line 659)	Illegal spectral unit 
+2019-12-11 04:57:10	WARN	WCCSAxisLabeller::setSpectralState (file ../../display/DisplayCanvas/WCCSAxisLabeller.cc, line 659)	Illegal spectral unit 
+2019-12-11 05:06:24	INFO	viewer::::	
+2019-12-11 05:06:24	INFO	viewer::::+	##########################################
+2019-12-11 05:06:24	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-11 05:06:24	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-11 05:06:24	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-11 05:06:24	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-11 05:06:24	INFO	viewer::::+	##########################################
+2019-12-11 05:07:24	INFO	viewer::::	
+2019-12-11 05:07:24	INFO	viewer::::+	##########################################
+2019-12-11 05:07:24	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-11 05:07:24	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-11 05:07:24	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-11 05:07:24	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-11 05:07:24	INFO	viewer::::+	##########################################
+2019-12-11 05:13:01	INFO	viewer::::	
+2019-12-11 05:13:01	INFO	viewer::::+	##########################################
+2019-12-11 05:13:01	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-11 05:13:01	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-11 05:13:01	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-11 05:13:02	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-11 05:13:02	INFO	viewer::::+	##########################################
+2019-12-11 05:14:02	INFO	FITSCoordinateUtil::fromFITSHeader	passing empty or nonexistant spectral Coordinate axis
+2019-12-11 05:14:02	INFO	FITSCoordinateUtil::fromFITSHeader	passing empty or nonexistant spectral Coordinate axis
+2019-12-11 05:16:39	INFO	viewer::::	
+2019-12-11 05:16:39	INFO	viewer::::+	##########################################
+2019-12-11 05:16:39	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-11 05:16:39	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-11 05:16:39	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-11 05:16:40	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-11 05:16:40	INFO	viewer::::+	##########################################
+2019-12-11 05:19:01	INFO	viewer::::	
+2019-12-11 05:19:01	INFO	viewer::::+	##########################################
+2019-12-11 05:19:01	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-11 05:19:01	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-11 05:19:01	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-11 05:19:02	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-11 05:19:02	INFO	viewer::::+	##########################################
+2019-12-11 05:20:12	INFO	viewer::::	
+2019-12-11 05:20:12	INFO	viewer::::+	##########################################
+2019-12-11 05:20:12	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-11 05:20:12	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-11 05:20:12	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-11 05:20:12	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-11 05:20:12	INFO	viewer::::+	##########################################
+2019-12-11 05:22:08	INFO	viewer::::	
+2019-12-11 05:22:08	INFO	viewer::::+	##########################################
+2019-12-11 05:22:08	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-11 05:22:08	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-11 05:22:08	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-11 05:22:09	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-11 05:22:09	INFO	viewer::::+	##########################################
+2019-12-11 05:24:53	INFO	viewer::::	
+2019-12-11 05:24:53	INFO	viewer::::+	##########################################
+2019-12-11 05:24:53	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-11 05:24:53	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-11 05:24:53	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-11 05:24:53	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-11 05:24:53	INFO	viewer::::+	##########################################
+2019-12-11 05:30:17	INFO	viewer::::	
+2019-12-11 05:30:17	INFO	viewer::::+	##########################################
+2019-12-11 05:30:17	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-11 05:30:17	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-11 05:30:17	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-11 05:30:17	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-11 05:30:17	INFO	viewer::::+	##########################################
+2019-12-11 05:32:58	INFO	viewer::::	
+2019-12-11 05:32:58	INFO	viewer::::+	##########################################
+2019-12-11 05:32:58	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-11 05:32:58	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-11 05:32:58	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-11 05:32:58	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-11 05:32:58	INFO	viewer::::+	##########################################
+2019-12-11 05:36:03	INFO	viewer::::	
+2019-12-11 05:36:03	INFO	viewer::::+	##########################################
+2019-12-11 05:36:03	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-11 05:36:03	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-11 05:36:03	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-11 05:36:03	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-11 05:36:03	INFO	viewer::::+	##########################################
+2019-12-11 05:38:01	INFO	viewer::::	
+2019-12-11 05:38:01	INFO	viewer::::+	##########################################
+2019-12-11 05:38:01	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-11 05:38:01	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-11 05:38:01	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-11 05:38:01	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-11 05:38:01	INFO	viewer::::+	##########################################

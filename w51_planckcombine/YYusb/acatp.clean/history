@@ -1,0 +1,89 @@
+IDL/MIR-to-MIRIAD, Version: Beta
+based on library version xx-xx-xx
+Target Source: W51YY
+LO Frequency:        95.118906 GHz
+UVFLAG: Executed on: 2019-12-11T12:53:06.0
+UVFLAG: Command line inputs follow:
+UVFLAG:   vis=W51YY_usb.10.miriad
+UVFLAG:   select=ant(2)
+UVFLAG:   flagval=flag
+UVFLAG: Overview of flagging on visibility file W51YY_usb.10.miriad
+UVFLAG: Changed flags set to FALSE (data flagged as bad)
+UVFLAG: Total number of records selected: 12; out of 42 records
+UVFLAG: Antennas used: 1,2,3,4,5,6,7
+UVFLAG: Counts of correlations within selected channels
+UVFLAG: channel   Originally  Currently
+UVFLAG: Good:              0          0    Changed to bad:          0
+UVFLAG: Bad:           12288      12288
+UVFLAG: wide      Originally  Currently
+UVFLAG: Good:              0          0    Changed to bad:          0
+UVFLAG: Bad:              12         12
+UVLIN: Miriad UvLin: version 1.0 24-Jan-07
+UVLIN: Executed on: 2019-12-11T12:53:06.0
+UVLIN: Command line inputs follow:
+UVLIN:   vis=W51YY_usb.10.miriad
+UVLIN:   chans=100,500
+UVLIN:   mode=chan0
+UVLIN:   out=W51YY_usb_ch0.10.miriad
+PUTHD: Miriad PutHd: Version 1.0 13-dec-96
+PUTHD: Executed on: 2019-12-11T13:29:30.0
+PUTHD: Command line inputs follow:
+PUTHD:   in=W51YY_usb_ch0.10.uv.miriad/telescop
+PUTHD:   value=single
+PUTHD:   type=a
+PUTHD: Miriad PutHd: Version 1.0 13-dec-96
+PUTHD: Executed on: 2019-12-11T13:29:30.0
+PUTHD: Command line inputs follow:
+PUTHD:   in=W51YY_usb_ch0.10.uv.miriad/pbtype
+PUTHD:   value=gaus(620.109)
+PUTHD:   type=a
+PUTHD: Miriad PutHd: Version 1.0 13-dec-96
+PUTHD: Executed on: 2019-12-11T13:29:30.0
+PUTHD: Command line inputs follow:
+PUTHD:   in=W51YY_usb_ch0.10.uv.miriad/systemp
+PUTHD:   value=100.0
+PUTHD:   type=r
+PUTHD: Miriad PutHd: Version 1.0 13-dec-96
+PUTHD: Executed on: 2019-12-11T13:29:30.0
+PUTHD: Command line inputs follow:
+PUTHD:   in=W51YY_usb_ch0.10.uv.miriad/jyperk
+PUTHD:   value=100.0
+PUTHD:   type=r
+UVAVER: Miriad UvAver: version 1.0 17-Nov-08
+UVAVER: Executed on: 2019-12-11T13:29:56.0
+UVAVER: Command line inputs follow:
+UVAVER:   vis=./intermediate_vis/*
+UVAVER:   options=nocal,nopass,nopol
+UVAVER:   out=./W51YY_usb_ch0.combined.miriad
+INVERT: Miriad invert: CVS Revision 1.12, 2012/05/25 12:53:15 UT
+INVERT: Executed on: 2019-12-11T13:29:56.0
+INVERT: Command line inputs follow:
+INVERT:   vis=./W51YY_usb_ch0.combined.miriad
+INVERT:   options=systemp,double,mosaic,mfs
+INVERT:   map=acatp.map
+INVERT:   beam=acatp.beam
+INVERT:   cell=10
+INVERT:   imsize=256
+INVERT:   robust=2.0
+MOSSDI: Miriad mossdi: CVS Revision 1.6, 2012/06/04 21:25:22 UTC
+MOSSDI: Executed on: 2019-12-11T13:30:00.0
+MOSSDI: Command line inputs follow:
+MOSSDI:   map=acatp.map
+MOSSDI:   beam=acatp.beam
+MOSSDI:   out=acatp.model
+MOSSDI:   gain=0.1
+MOSSDI:   niters=10000
+MOSSDI:   cutoff=0.3
+MOSSDI:   options=positive
+MOSSDI:   cutoff=0.3
+MOSSDI: Bounding region is BLC=(63,63,1),TRC=(311,295,1)
+MOSSDI: Total Iterations = 10504
+RESTOR: Miriad restor: CVS Revision 1.6, 2013/07/20 03:35:27 UTC
+RESTOR: Executed on: 2019-12-11T13:30:00.0
+RESTOR: Command line inputs follow:
+RESTOR:   map=acatp.map
+RESTOR:   beam=acatp.beam
+RESTOR:   model=acatp.model
+RESTOR:   mode=clean
+RESTOR:   out=acatp.clean
+RESTOR: Beam =  2.501E+02 x  1.969E+02 arcsec, pa =  3.862E+01 degrees
