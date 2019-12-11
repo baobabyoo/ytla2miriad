@@ -1603,12 +1603,29 @@ if (not keyword_set(verbose)) then verbose = 0
     unit = 0
     for i = 0, ( ytla.nint - 1 ), 1 do begin
 
+        dra  = float(ytla.poffset[0, i])  ; ra  offset in arcmin units
+        ddec = float(ytla.poffset[1, i])  ; dec offset in arcmin units
+        dra =  dra  * float(2. * !PI / (60. * 360.))
+        ddec = ddec * float(2. * !PI / (60. * 360.))
+
         ; ***** setting output file handle unit *****
         if ( KEYWORD_SET(pntsplit) ) then begin
+          mosaic_flag = 0
           dir  = source + '_' + sideband + '.' + strtrim( string(i), 1) + '.miriad'
           if (verbose) then print, ' - - - - -Outputting data into a new file- - - - - '
           if (verbose) then print, dir
         endif
+
+        if ( mosaic_flag eq 0 ) then begin
+        ; outputting single-source file
+           srcra_hd  = srcra  + dra / cos(srcdec)
+           srcdec_hd = srcdec + ddec
+           obscoord = ytla_getobscooord(ytla, srcra_hd, srcdec_hd)
+        endif else begin
+        ; outputting multi-source file
+           srcra_hd  = srcra
+           srcdec_hd = srcdec
+        endelse
 
         ; control whether or not a new file is opened for output
         if_newfile = 'no'
@@ -1680,9 +1697,9 @@ if (not keyword_set(verbose)) then verbose = 0
           result=CALL_EXTERNAL(libfile, $
                            'idl_uvputvr',unit,'a','source',source)
           result=CALL_EXTERNAL(libfile, $
-                           'idl_uvputvr',unit,'d','ra',srcra,one)
+                           'idl_uvputvr',unit,'d','ra',srcra_hd,one)
           result=CALL_EXTERNAL(libfile, $
-                           'idl_uvputvr',unit,'d','dec',srcdec,one)
+                           'idl_uvputvr',unit,'d','dec',srcdec_hd,one)
           result=CALL_EXTERNAL(libfile, $
                            'idl_uvputvr',unit,'r','epoch',float(epoch),one)
           result=CALL_EXTERNAL(libfile, $
@@ -1823,13 +1840,7 @@ if (not keyword_set(verbose)) then verbose = 0
                result=CALL_EXTERNAL(libfile, $
                                    'idl_uvputvr',unit,'d','lst',lst, one)
       
-      
-             if (mosaic_flag eq 1) then begin
-               dra  = float(ytla.poffset[0, i])  ; ra  offset in arcmin units
-               ddec = float(ytla.poffset[1, i])  ; dec offset in arcmin units
-               dra =  dra  * float(2. * !PI / (60. * 360.))
-               ddec = ddec * float(2. * !PI / (60. * 360.))
-      
+             if (mosaic_flag eq 1) then begin      
                result=CALL_EXTERNAL(libfile, $
                               'idl_uvputvr',unit,'r','dra',dra, one)
       

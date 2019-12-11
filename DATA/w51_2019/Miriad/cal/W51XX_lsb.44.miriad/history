@@ -2,55 +2,7 @@ IDL/MIR-to-MIRIAD, Version: Beta
 based on library version xx-xx-xx
 Target Source: W51XX
 LO Frequency:        92.881094 GHz
-UVFLAG: Executed on: 2019-12-09T13:45:12.0
-UVFLAG: Command line inputs follow:
-UVFLAG:   vis=W51XX_lsb.44.miriad
-UVFLAG:   select=ant(2)
-UVFLAG:   flagval=flag
-UVFLAG: Overview of flagging on visibility file W51XX_lsb.44.miriad
-UVFLAG: Changed flags set to FALSE (data flagged as bad)
-UVFLAG: Total number of records selected: 12; out of 42 records
-UVFLAG: Antennas used: 1,2,3,4,5,6,7
-UVFLAG: Counts of correlations within selected channels
-UVFLAG: channel   Originally  Currently
-UVFLAG: Good:              0          0    Changed to bad:          0
-UVFLAG: Bad:           12288      12288
-UVFLAG: wide      Originally  Currently
-UVFLAG: Good:              0          0    Changed to bad:          0
-UVFLAG: Bad:              12         12
-UVFLAG: Executed on: 2019-12-09T13:45:56.0
-UVFLAG: Command line inputs follow:
-UVFLAG:   vis=W51XX_lsb.44.miriad
-UVFLAG:   select=ant(2)
-UVFLAG:   flagval=flag
-UVFLAG: Overview of flagging on visibility file W51XX_lsb.44.miriad
-UVFLAG: Changed flags set to FALSE (data flagged as bad)
-UVFLAG: Total number of records selected: 12; out of 42 records
-UVFLAG: Antennas used: 1,2,3,4,5,6,7
-UVFLAG: Counts of correlations within selected channels
-UVFLAG: channel   Originally  Currently
-UVFLAG: Good:              0          0    Changed to bad:          0
-UVFLAG: Bad:           12288      12288
-UVFLAG: wide      Originally  Currently
-UVFLAG: Good:              0          0    Changed to bad:          0
-UVFLAG: Bad:              12         12
-UVFLAG: Executed on: 2019-12-09T13:47:05.0
-UVFLAG: Command line inputs follow:
-UVFLAG:   vis=W51XX_lsb.44.miriad
-UVFLAG:   select=ant(2)
-UVFLAG:   flagval=flag
-UVFLAG: Overview of flagging on visibility file W51XX_lsb.44.miriad
-UVFLAG: Changed flags set to FALSE (data flagged as bad)
-UVFLAG: Total number of records selected: 12; out of 42 records
-UVFLAG: Antennas used: 1,2,3,4,5,6,7
-UVFLAG: Counts of correlations within selected channels
-UVFLAG: channel   Originally  Currently
-UVFLAG: Good:              0          0    Changed to bad:          0
-UVFLAG: Bad:           12288      12288
-UVFLAG: wide      Originally  Currently
-UVFLAG: Good:              0          0    Changed to bad:          0
-UVFLAG: Bad:              12         12
-UVFLAG: Executed on: 2019-12-09T13:48:48.0
+UVFLAG: Executed on: 2019-12-11T12:53:02.0
 UVFLAG: Command line inputs follow:
 UVFLAG:   vis=W51XX_lsb.44.miriad
 UVFLAG:   select=ant(2)

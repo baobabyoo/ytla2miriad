@@ -159,3 +159,11 @@
 2019-12-09 06:04:25	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
 2019-12-09 06:04:25	INFO	viewer::::	##### End Task: viewer               #####
 2019-12-09 06:04:25	INFO	viewer::::+	##########################################
+2019-12-09 06:18:02	INFO	viewer::::	
+2019-12-09 06:18:02	INFO	viewer::::+	##########################################
+2019-12-09 06:18:02	INFO	viewer::::+	##### Begin Task: viewer             #####
+2019-12-09 06:18:02	INFO	viewer::::	viewer(infile="",displaytype="raster",channel=0,zoom=1,outfile="",
+2019-12-09 06:18:02	INFO	viewer::::+	        outscale=1.0,outdpi=300,outformat="jpg",outlandscape=False,gui=True)
+2019-12-09 06:18:02	INFO	viewer::::	##### End Task: viewer               #####
+2019-12-09 06:18:02	INFO	viewer::::+	##########################################
+2019-12-09 06:26:45	SEVERE	viewer::::	An error occurred running task viewer.

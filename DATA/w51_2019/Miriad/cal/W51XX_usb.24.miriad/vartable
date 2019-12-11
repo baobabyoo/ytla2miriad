@@ -35,8 +35,6 @@ d antpos
 r inttime
 d ut
 d lst
-r dra
-r ddec
 r wsystemp
 r systemp
 i pol
