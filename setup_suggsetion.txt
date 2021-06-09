@@ -1,0 +1,22 @@
+
+to use this tool, I did the following setup (in bash):
+
+0. export the current directory to system:
+export YMC="$HOME/analysis/ytla2miriad"
+
+1. add it to IDL_PATH
+export IDL_PATH='<IDL_DEFAULT>:'+$YMC
+
+2. to use the external lib (do not omit the trailing '/'
+export IDLLIB="$YMC/idl_sav/"
+
+
+in the analysis script, the following can be called:
+
+    .r ytla2miriad
+
+    load_ytla, ytla, <YTLA_h5_file>
+
+    ytla2miriad, ytla, dir=<OUT_DIR>, source=<source_name>, sideband=<lsb|usb>
+
+

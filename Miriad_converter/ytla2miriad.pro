@@ -43,6 +43,9 @@ fid = h5f_open(filename)
 lomhz = h5a_read(  h5a_open_name(fid, 'LO')  )
 ytla  = create_struct('LO', lomhz)
 
+bwmhz = h5a_read(  h5a_open_name(fid, 'bw')  )
+ytla  = create_struct(ytla, 'BW', bwmhz)
+
 ;; loading the visibilities
 cstruct = h5d_read(  h5d_open(fid, 'cross')  )
 cross   = dcomplex(cstruct.r, cstruct.i)
@@ -1360,7 +1363,12 @@ if (not keyword_set(verbose)) then verbose = 0
 
 ;; Setting path to the library file ------------------------------
   if not KEYWORD_SET(libpath) then begin
-     libpath = '../idl_sav/'
+    tmp = getenv('IDLLIB')
+    if (tmp eq '') then begin
+      libpath = '../idl_sav/'
+    endif else begin
+      libpath = tmp
+    endelse
   endif
 
   if (strpos(!VERSION.ARCH,'86') ge 0) then begin
@@ -1438,10 +1446,11 @@ if (not keyword_set(verbose)) then verbose = 0
     ; evaluating LO frequencies in units of GHz
       YTLA_nch = 1024 ; number of channels in each sideband
       YTLALO = ( 84000d + ytla.LO )
+      YTLABW = ytla.BW
       if ( sideband eq 'usb' ) then begin
-         RF = YTLALO + 2240d * findgen(YTLA_nch) / 1024d
+         RF = YTLALO + YTLABW * findgen(YTLA_nch) / 1024d
       endif else begin
-         RF = YTLALO - 2240d * findgen(YTLA_nch) / 1024d
+         RF = YTLALO - YTLABW * findgen(YTLA_nch) / 1024d
       endelse
       YTLALO = YTLALO / 1000d
       RF     = RF     / 1000d
@@ -1530,7 +1539,12 @@ if (not keyword_set(verbose)) then verbose = 0
       restfreq[sbcount] = LO
 
       ; "Freq resolution" in GHz unit
-      sdf[sbcount] = ( 2240d / 1024d ) / 1000d
+      ;sdf[sbcount] = ( YTLABW / 1024d ) / 1000d
+      if ( sideband eq 'usb' ) then begin
+         sdf[sbcount] = ( YTLABW / 1024d ) / 1000d
+      endif else begin
+         sdf[sbcount] = -( YTLABW / 1024d ) / 1000d
+      endelse
 
       ; "Sky Freq for central channel" (tentative, not accurate), in GHz unit
       sfreq[sbcount] = LO
@@ -1849,7 +1863,7 @@ if (not keyword_set(verbose)) then verbose = 0
              endif
       
              if (verbose) then print,'  - cycling through all baselines to get baseline-based tsys  -'
-             delta_nu = sdf[0] * 1e9
+             delta_nu = abs(sdf[0]) * 1e9
              ytla_wttoTsys, ytla, i, wbtsys, wbflag, delta_nu, inttime, jyperK, sideband, ytla_baselines
              ytla_wttoTsys, ytla, i, nbtsys, nbflag, delta_nu, inttime, jyperK, sideband, ytla_baselines
       
@@ -1859,8 +1873,10 @@ if (not keyword_set(verbose)) then verbose = 0
                ytla_getwtsys, ytla, nants, wbtsys, wbflag, wtsys, wsolflag, ant_wflag
                wtsys2 = reform( wtsys, nants*1 )
                ; narrowband
+                ;print, nbtsys
                ytla_gettsys, ytla, nants, nbtsys, nbflag, tsys, solflag, ant_flag
                tsys2 = reform(tsys, nants*nspect)
+                ;print, tsys2
     
       
              ; Exporting Tsys
@@ -1982,6 +1998,10 @@ pro run_convert, name
     loc = name.indexof('.ytla')
     if (loc gt -1) then begin		; strip trailing characters
 	name = name.remove(loc, -1)
+    endif
+    loc2 = bname.indexof('.ytla')
+    if (loc2 gt -1) then begin		; strip trailing characters
+	bname = bname.remove(loc2, -1)
     endif
 
     pols = ['X', 'Y']
